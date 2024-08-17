@@ -1,4 +1,4 @@
-import React from 'react';
+import React,{ useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { removeItem, updateQuantity } from './CartSlice';
 import './CartItem.css';
@@ -25,23 +25,22 @@ const CartItem = ({ onContinueShopping }) => {
     }, [cart]);
 
 
-  const handleIncrement = (item) => {
-    const updatedItem = {...item, quantity: item.quantity + 1};
-    dispatch(updateQuantity(updatedItem));
-  };
+    const handleIncrement = (item) => {
+        const updatedItem = {...item, quantity: item.quantity + 1};
+        dispatch(updateQuantity(updatedItem));
+    };
 
-  const handleDecrement = (item) => {
-   if (item.quantity > 1) {
-    const updatedItem = {...item, quantity: item.quantity - 1};
-    dispatch(updateQuantity(updatedItem));
-   } else {
-    dispatch(removeItem(item.name));
-   }
-  };
+    const handleDecrement = (item) => {
+      if (item.quantity > 1) {
+        const updatedItem = {...item, quantity: item.quantity - 1};
+        dispatch(updateQuantity(updatedItem));
+    } else {
+        dispatch(removeItem(item.name));
+    }
+    };
 
   const handleRemove = (item) => {
     dispatch(removeItem(item.name));
-    }
   };
 
   // Calculate total cost based on quantity for an item
@@ -55,7 +54,7 @@ const CartItem = ({ onContinueShopping }) => {
 
   return (
     <div className="cart-container">
-      <h2 style={{ color: 'black' }}>Total Cart Amount: ${calculateTotalAmount()}</h2>
+      <h2 style={{ color: 'black' }}>Total Cart Amount: ${totalAmount.toFixed(2)}</h2>
       <div>
         {cart.map(item => (
           <div className="cart-item" key={item.name}>
