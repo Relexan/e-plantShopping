@@ -5,31 +5,52 @@ import './CartItem.css';
 
 const CartItem = ({ onContinueShopping }) => {
   const cart = useSelector(state => state.cart.items);
+  const [totalAmount,setTotalAmount] = useState(0)
   const dispatch = useDispatch();
 
-  // Calculate total amount for all products in the cart
-  const calculateTotalAmount = () => {
- 
-  };
+  useEffect(() => {
+    const calculateTotalAmount = () => {
+        let totalCost = 0;
+        cart.forEach(item => {
+        
+        const itemCost = parseFloat(item.cost.replace('$', ''));
+        const itemQuantity = parseInt(item.quantity, 10);
+        totalCost += itemCost * itemQuantity;
+        
+    });
+        setTotalAmount(totalCost);
+    };
 
-  const handleContinueShopping = (e) => {
-   
-  };
-
+    calculateTotalAmount();
+    }, [cart]);
 
 
   const handleIncrement = (item) => {
+    const updatedItem = {...item, quantity: item.quantity + 1};
+    dispatch(updateQuantity(updatedItem));
   };
 
   const handleDecrement = (item) => {
-   
+   if (item.quantity > 1) {
+    const updatedItem = {...item, quantity: item.quantity - 1};
+    dispatch(updateQuantity(updatedItem));
+   } else {
+    dispatch(removeItem(item.name));
+   }
   };
 
   const handleRemove = (item) => {
+    dispatch(removeItem(item.name));
+    }
   };
 
   // Calculate total cost based on quantity for an item
   const calculateTotalCost = (item) => {
+    return (parseFloat(item.cost.replace('$', '')) * parseInt(item.quantity, 10)).toFixed(2);
+  };
+
+  const handleCheckoutShopping = (e) => {
+    alert('Functionality to be added for future reference');
   };
 
   return (
@@ -55,7 +76,7 @@ const CartItem = ({ onContinueShopping }) => {
       </div>
       <div style={{ marginTop: '20px', color: 'black' }} className='total_cart_amount'></div>
       <div className="continue_shopping_btn">
-        <button className="get-started-button" onClick={(e) => handleContinueShopping(e)}>Continue Shopping</button>
+        <button className="get-started-button" onClick={onContinueShopping}>Continue Shopping</button>
         <br />
         <button className="get-started-button1">Checkout</button>
       </div>
